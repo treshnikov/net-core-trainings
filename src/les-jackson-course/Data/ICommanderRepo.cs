@@ -5,8 +5,10 @@ namespace Cmd.Data
 {
     public interface ICommanderRepo
     {
-        IEnumerable<Command> GetAllCommands(); 
+        bool SaveChanges();
 
+        IEnumerable<Command> GetAllCommands(); 
         Command FirstOrDefaultCommandById(int id);
+        void CreateCommand(Command cmd);
     }
 }

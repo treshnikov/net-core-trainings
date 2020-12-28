@@ -3,6 +3,11 @@ using System.ComponentModel.DataAnnotations;
 namespace Cmd.Models
 {
     public class Command{
+        public Command()
+        {
+            
+        }
+
         public Command(int id, string howTo, string line, string platform)
         {
             Id = id;
