@@ -1,0 +1,27 @@
+version: "3"
+services:  
+  
+  sqlserver:
+    build: docker/sqlserver/
+    ports:
+      - "1433:1433"
+    environment:      
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Qwerty123!
+      
+  elastic:
+    build: docker/elasticsearch/
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      discovery.type: single-node
+      
+  webserver:
+    build: src/
+    ports:
+      - "80:80"
+    network_mode: host
+    depends_on:
+      - sqlserver          
+      - elastic
