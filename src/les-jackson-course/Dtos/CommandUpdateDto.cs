@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cmd.Dtos
 {
-    public class CommandCreateDto{
-        public CommandCreateDto(string howTo, string line, string platform)
+    public class CommandUpdateDto{
+        public CommandUpdateDto(string howTo, string line, string platform)
         {
             HowTo = howTo;
             Line = line;

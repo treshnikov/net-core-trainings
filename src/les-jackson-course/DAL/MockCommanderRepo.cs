@@ -38,5 +38,17 @@ namespace Cmd.Data
 
             _commands.Add(cmd);
         }
+
+        public void UpdateCommand(Command cmd)
+        {
+            var r = _commands.FirstOrDefault(i => i.Id == cmd.Id);
+            if (r == null)
+            {
+                return;
+            }
+
+            _commands.Remove(r);
+            _commands.Add(cmd);
+        }
     }
 }

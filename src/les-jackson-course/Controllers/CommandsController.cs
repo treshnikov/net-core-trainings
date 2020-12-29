@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Cmd.Data;
@@ -53,7 +54,23 @@ namespace Cmd.Controllers
             var res = _mapper.Map<CommandReadDto>(command);
 
             return CreatedAtRoute(nameof(GetCommandById), new {Id = res.Id}, res);
-            //return Ok(res);
+        }
+
+        //PUT api/commands/{id}
+        [HttpPut("{id}")]
+        public ActionResult UpdateCommand(int id, CommandUpdateDto commandUpdateDto)
+        {
+            var command = _commandsRepository.FirstOrDefaultCommandById(id);
+            if (command == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(commandUpdateDto, command);
+            _commandsRepository.UpdateCommand(command);
+            _commandsRepository.SaveChanges();
+
+            return NoContent();
         }
     }
 }
