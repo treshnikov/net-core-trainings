@@ -43,5 +43,15 @@ namespace Cmd.Data
         {
             _context.Commands.Update(cmd);
         }
+
+        public void DeleteCommand(Command cmd)
+        {
+             if (cmd == null)
+            {
+                throw new ArgumentException("Command is undefined.", nameof(cmd));
+            }
+
+            _context.Commands.Remove(cmd);    
+        }
     }
 }

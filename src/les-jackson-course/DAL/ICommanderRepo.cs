@@ -10,6 +10,7 @@ namespace Cmd.Data
         Command FirstOrDefaultCommandById(int id);
         void CreateCommand(Command cmd);
         void UpdateCommand(Command cmd);
+        void DeleteCommand(Command cmd);
 
     }
 }

@@ -50,5 +50,21 @@ namespace Cmd.Data
             _commands.Remove(r);
             _commands.Add(cmd);
         }
+
+        public void DeleteCommand(Command cmd)
+        {
+            if (cmd == null)
+            {
+                return;
+            }
+
+             var r = _commands.FirstOrDefault(i => i.Id == cmd.Id);
+            if (r == null)
+            {
+                return;
+            }
+
+            _commands.Remove(r);
+        }
     }
 }
