@@ -25,7 +25,8 @@ namespace SecureClient
         IConfiguration Configuration;
 
         var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(Directory
+            .GetCurrentDirectory())
             .AddJsonFile(path);
 
         Configuration = builder.Build();
