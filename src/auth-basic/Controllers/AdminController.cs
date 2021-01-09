@@ -34,7 +34,7 @@ namespace auth_basic
 
             var claims = new List<Claim>
             {
-                new Claim("Demo", "Value")
+                new Claim(ClaimsIdentity.DefaultNameClaimType, model.UserName)
             };
             var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimIdentity);
