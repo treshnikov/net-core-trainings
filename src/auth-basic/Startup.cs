@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,8 +15,8 @@ namespace auth_basic
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication("Cookie")
-                .AddCookie("Cookie", opt => {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(opt => {
                     opt.LoginPath = "/Admin/Login";
                 });
             services.AddAuthorization();
