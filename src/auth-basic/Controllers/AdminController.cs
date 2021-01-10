@@ -14,6 +14,9 @@ namespace auth_basic
     {
         public IActionResult Index()
         {
+            ViewBag.UserName = User.Identity.Name;
+            ViewBag.IsAuthenticated = User.Identity.IsAuthenticated;
+
             return View();
         }
 
@@ -34,7 +37,7 @@ namespace auth_basic
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, model.UserName)
+                new Claim(ClaimTypes.Name, model.UserName)
             };
             var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimIdentity);
