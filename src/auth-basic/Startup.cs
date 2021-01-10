@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -18,8 +19,15 @@ namespace auth_basic
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt => {
                     opt.LoginPath = "/Admin/Login";
+                    opt.AccessDeniedPath = "/Admin/AccessDenied";
                 });
-            services.AddAuthorization();
+            services.AddAuthorization(opt => {
+                opt.AddPolicy("SuperUser", builder => {
+                    builder.RequireAssertion(x => 
+                        x.User.HasClaim(ClaimTypes.Role, "Administrator") && 
+                        x.User.HasClaim(ClaimTypes.Role, "Manager"));
+                });
+            });
             services.AddControllersWithViews();
         }
 
