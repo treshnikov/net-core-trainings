@@ -36,7 +36,7 @@ namespace auth_basic
             {
                 new Claim(ClaimTypes.Name, model.UserName),
                 new Claim(ClaimTypes.Role, "Administrator"),
-                new Claim(ClaimTypes.Role, "Manager")
+                //new Claim(ClaimTypes.Role, "Manager")
             };
             var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimIdentity);

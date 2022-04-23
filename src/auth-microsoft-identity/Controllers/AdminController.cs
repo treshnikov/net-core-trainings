@@ -13,13 +13,16 @@ namespace auth_microsoft_identity
     [Authorize]
     public class AdminController : Controller
     {
+        private readonly IJwtGenerator _jwtGenerator;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
         public AdminController(
+            IJwtGenerator jwtGenerator,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager)
         {
+            this._jwtGenerator = jwtGenerator;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -59,7 +62,36 @@ namespace auth_microsoft_identity
                 return Redirect(model.ReturnUrl);
             }
 
+            model.Token = _jwtGenerator.CreateToken(user);
             return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<LoginViewModel>> Signin(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Ok(model);
+            }
+
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User not found.");
+                return Ok(model);
+            }
+
+            var signinResult = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if (signinResult.Succeeded)
+            {
+                model.Token = _jwtGenerator.CreateToken(user);
+                return Ok(model);
+            }
+            
+            return ValidationProblem();
         }
 
         public async Task<IActionResult> LogOut()
@@ -73,7 +105,8 @@ namespace auth_microsoft_identity
             return View();
         }
 
-        [Authorize(Policy = "SuperUser")]
+        //[Authorize(Policy = "SuperUser")]
+        [Authorize(Roles = "Administrator123")]
         public IActionResult Administrator()
         {
             return View();
@@ -93,5 +126,7 @@ namespace auth_microsoft_identity
         public string Password { get; set; }
         [Required]
         public string ReturnUrl { get; set; }
+    
+        public string Token { get; set; }
     }
 }

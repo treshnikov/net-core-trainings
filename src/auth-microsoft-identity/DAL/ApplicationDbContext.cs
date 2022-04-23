@@ -8,7 +8,7 @@ namespace auth_microsoft_identity
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            
+            Database.EnsureCreated();
         }
     }
 }

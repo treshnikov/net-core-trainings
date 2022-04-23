@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace auth_microsoft_identity
 {
@@ -25,9 +26,11 @@ namespace auth_microsoft_identity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(opt => {
-                opt.UseSqlServer(_configuration.GetConnectionString("ConnectionString"));
+                opt.UseSqlite(_configuration.GetConnectionString("ConnectionString"));
             });
-
+            
+            services.AddScoped<auth_microsoft_identity.IJwtGenerator, JwtGenerator>();
+            
             services.AddIdentity<AppUser, AppRole>(opt =>
             {
                     opt.Password.RequireDigit = false;
@@ -51,6 +54,21 @@ namespace auth_microsoft_identity
                         x.User.HasClaim(ClaimTypes.Role, "Manager"));
                 });
             });
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token"]));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(
+                    opt =>
+                        {
+                            opt.TokenValidationParameters = new TokenValidationParameters
+                                                                {
+                                                                    ValidateIssuerSigningKey = true,
+                                                                    IssuerSigningKey = key,
+                                                                    ValidateAudience = false,
+                                                                    ValidateIssuer = false,
+                                                                };
+                        });	
+
             services.AddControllersWithViews();
         }
 
